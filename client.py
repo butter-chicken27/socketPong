@@ -1,8 +1,17 @@
 import pygame
 import socket
+import time
 # import os
 # os.environ['SDL_VIDEODRIVER']='windib'
 FPS = 60
+BLACK = (0,0,0)
+WHITE = (128,128,128)
+PADDLE_WIDTH = 12
+PADDLE_HEIGHT = 120
+SCREEN_WIDTH = 572 * 3
+SCREEN_HEIGHT = 256 * 3
+BALL_WIDTH = 12
+BALL_HEIGHT = 12
 
 clientSocket = socket.socket()
 clientSocket.connect(('127.0.0.1',7668))
@@ -10,17 +19,36 @@ print(clientSocket.recv(1024).decode())
 
 pygame.init()
 framesPerSec = pygame.time.Clock()
-screen = pygame.display.set_mode((400,500))
-screen.fill(pygame.BLACK)
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+
 while True:
+    framesPerSec.tick(FPS)
+    screen.fill(BLACK)
     keys_pressed = pygame.key.get_pressed()
     if(keys_pressed[pygame.K_UP]):
-        clientSocket.send('U'.encode())
+        msg = 'U'
+        # clientSocket.send('U'.encode())
     elif(keys_pressed[pygame.K_DOWN]):
-        clientSocket.send('D'.encode())
+        msg = 'D'
+        # clientSocket.send('D'.encode())
     else:
-        clientSocket.send('#'.encode())
+        msg = '#'
+    
+    try:
+        clientSocket.send(msg.encode())
+    except BrokenPipeError:
+        break
 
-    print(f'{clientSocket.recv(1024).decode()}\r')
-    framesPerSec.tick(FPS)
+    serverResponse = clientSocket.recv(1024).decode()
+    p1x,p1y,p2x,p2y,ballx,bally = serverResponse.split(',')
+
+    pygame.draw.rect(screen, WHITE, pygame.Rect(int(p1x),int(p1y), PADDLE_WIDTH,PADDLE_HEIGHT))
+    pygame.draw.rect(screen, WHITE, pygame.Rect(int(p2x),int(p2y), PADDLE_WIDTH,PADDLE_HEIGHT))
+    pygame.draw.rect(screen, WHITE, pygame.Rect(int(ballx),int(bally), 20,20))
+
+    # time.sleep(0.01)
     pygame.display.update()
+    pygame.event.pump()
+
+pygame.quit()
+clientSocket.close()
