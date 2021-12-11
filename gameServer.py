@@ -3,6 +3,7 @@ import pygame
 import random
 import math
 import threading
+import time
 
 WHITE = (128, 128, 128)
 BLACK = (0, 0, 0)
@@ -119,6 +120,10 @@ def gameRoom(port,ports):
         connection2.send(state.encode())
     connection1.close()
     connection2.close()
+    serverSocket.close()
+
+    #Waiting for the socket to fully close before actually setting the port to available
+    time.sleep(20)
     ports[port - 8000] = True
 
 def main():

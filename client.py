@@ -14,14 +14,14 @@ BALL_WIDTH = 12
 BALL_HEIGHT = 12
 
 clientSocket = socket.socket()
-clientSocket.connect(('127.0.0.1',7668))
+clientSocket.connect(('35.154.122.35',7668))
 gamePort = int(clientSocket.recv(1024).decode())
 print(gamePort)
 clientSocket.close()
 
 time.sleep(3)
 gameSocket = socket.socket()
-gameSocket.connect(('127.0.0.1',gamePort))
+gameSocket.connect(('35.154.122.35',gamePort))
 print(gameSocket.recv(1024).decode())
 
 pygame.init()
