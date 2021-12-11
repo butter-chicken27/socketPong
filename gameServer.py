@@ -44,7 +44,7 @@ class Ball(pygame.sprite.Sprite):
     def set_speed(self):
         self.speed = 5 * 3
         self.x_speed = 0
-        while(abs(self.x_speed) < 1.5):
+        while(abs(self.x_speed) < 10):
             self.angle = random.uniform(0, 2 * 3.14529)
             self.x_speed = self.speed * math.cos(self.angle)
             self.y_speed = self.speed * math.sin(self.angle)
@@ -72,9 +72,9 @@ def gameRoom(port,availablePorts):
         else:
             connection2, add2 = serverSocket.accept()
             count += 1
-    msg1 = "You are player1.\n You play with the left paddle.\n Move with arrows"
+    msg1 = "You are player1.\n You play with the left paddle.\n Move with arrows\n Press Q to quit"
     connection1.send(msg1.encode())
-    msg2 = "You are player2.\n You play with the right paddle.\n Move with arrows"
+    msg2 = "You are player2.\n You play with the right paddle.\n Move with arrows\n Press Q to quit"
     connection2.send(msg2.encode())
 
     pygame.init()
