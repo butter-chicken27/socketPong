@@ -57,7 +57,7 @@ class Ball(pygame.sprite.Sprite):
                 self.y_speed = self.y_speed * -1
         self.rect.move_ip(self.x_speed, self.y_speed)
 
-def gameRoom(port,ports):
+def gameRoom(port,availablePorts):
     serverSocket = socket.socket()
 
     serverSocket.bind(('', port))        
@@ -102,18 +102,12 @@ def gameRoom(port,ports):
             ball.x_speed *= -1
 
         if ball.rect.right > SCREEN_WIDTH:
-            # print('Player 1 Win')
-            # connection1.close()
-            # connection2.close()
-            ball.x_speed *= -1
-            # break
+            #Resetting the ball position when a player loses
+            ball = Ball()
 
         if ball.rect.left < 0:
-            # print('Player 2 Win')
-            # connection1.close()
-            # connection2.close()
-            ball.x_speed *= -1
-            # break
+            #Resetting the ball position when a player loses
+            ball = Ball()
 
         state = f'{P1.rect[0]},{P1.rect[1]},{P2.rect[0]},{P2.rect[1]},{ball.rect[0]},{ball.rect[1]}'
         connection1.send(state.encode())
@@ -124,7 +118,7 @@ def gameRoom(port,ports):
 
     #Waiting for the socket to fully close before actually setting the port to available
     time.sleep(20)
-    ports[port - 8000] = True
+    availablePorts[port - 8000] = True
 
 def main():
     mainPort = 7668
