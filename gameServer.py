@@ -104,10 +104,12 @@ def gameRoom(port,availablePorts):
         if ball.rect.right > SCREEN_WIDTH:
             #Resetting the ball position when a player loses
             ball = Ball()
+            ball.set_speed()
 
         if ball.rect.left < 0:
             #Resetting the ball position when a player loses
             ball = Ball()
+            ball.set_speed()
 
         state = f'{P1.rect[0]},{P1.rect[1]},{P2.rect[0]},{P2.rect[1]},{ball.rect[0]},{ball.rect[1]}'
         connection1.send(state.encode())
